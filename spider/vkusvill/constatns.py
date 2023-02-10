@@ -1,8 +1,11 @@
 """
 File contains constants for spider
 """
+import re
 
-URL = "https://vkusvill.ru/ajax/product_comments/from_api/comments_load_page.php?id={product_id}&rate=&brand=&page={page_number}"
+REVIEW_URL = "https://vkusvill.ru/ajax/product_comments/from_api/comments_load_page.php?id={product_id}&rate=&brand=&page={page_number}"
+CATEGORY_URL = "https://vkusvill.ru/goods/goryachaya-eda/?PAGEN_1={page_number}"
+CATEGORY_PAGE = "https://vkusvill.ru/goods/goryachaya-eda/"
 
 HEADERS = {
     'Sec-Ch-Ua': '"Chromium";v="109", "Not_A Brand";v="99"',
@@ -20,3 +23,13 @@ HEADERS = {
     'Accept-Encoding': 'gzip, deflate',
     'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8',
 }
+
+
+# CONST
+MAX_REVIEW_PAGE = 50
+TITLE_TAG = 'ProductCard__content'
+
+MY_DIR = '/Users/Arslan/Desktop/Joker/saved_files/'
+# REGEX
+ITEMS_COUNT_REGEX = re.compile(r'value=\"(?P<items_count>\d*)\"')
+ITEMS_ID_REGEX = re.compile(".*ProductCard__QuickView btn_text _desktop-sm b500 js-product-quickview.*")
