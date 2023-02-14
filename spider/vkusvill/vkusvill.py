@@ -7,7 +7,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from spider.vkusvill.constatns import HEADERS, REVIEW_URL, CATEGORY_URL, CATEGORY_PAGE, ITEMS_COUNT_REGEX, \
-    ITEMS_ID_REGEX, MAX_REVIEW_PAGE, TITLE_TAG, MY_DIR
+    ITEMS_ID_REGEX, MAX_REVIEW_PAGE, TITLE_TAG, MY_DIR, REVIEWS_COUNT
 
 
 def save_file(title: str, reviews: list):
@@ -25,12 +25,18 @@ def get_review(items_id: defaultdict[str, str]):
     """
     get review from item page
     """
-    all_reviews = []
+    reviews_count = None
     with requests.Session() as session:
         session.headers = HEADERS
         for title, item_id in items_id.items():
             print(f'GETTING REVIEWS FOR [{title}] STARTED')
-            for page_number in range(1, MAX_REVIEW_PAGE):
+            all_reviews = []
+            for page_number in range(
+                    1,
+                    MAX_REVIEW_PAGE
+                    # if not reviews_count
+                    # else reviews_count
+            ):
                 response = session.get(
                     url=REVIEW_URL.format(
                         product_id=item_id,
@@ -39,13 +45,27 @@ def get_review(items_id: defaultdict[str, str]):
                     headers=HEADERS,
                 )
                 soup = BeautifulSoup(response.text, 'html.parser')
+
+                # if not reviews_count:
+                #     reviews_count = get_reviews_count(soup)
+
                 raw_review = soup.find_all('div', {'class': 'Comment__text'})
 
                 for review in raw_review:
                     all_reviews.append([review.text])
-                time.sleep(2)
-            print(f'FIND REVIEWS COUNT:{len(all_reviews)}')
+
+                print(f'FIND REVIEWS COUNT:  {len(all_reviews)}')
+                time.sleep(1)
+
             save_file(title, all_reviews)
+
+def get_reviews_count(soup) -> int | None:
+    raw_reviews_count = soup.find('span', {'class': 'ProductCommentsRating--cnt-avg'})
+    if reviews_count := REVIEWS_COUNT.search(raw_reviews_count.text):
+        return round(
+            int(reviews_count.group('reviews_count')) / 10
+        )
+    return None
 
 
 def _get_page_count(session) -> int:

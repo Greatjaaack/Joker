@@ -26,10 +26,13 @@ HEADERS = {
 
 
 # CONST
-MAX_REVIEW_PAGE = 50
+MAX_REVIEW_PAGE = 6
 TITLE_TAG = 'ProductCard__content'
 
 MY_DIR = '/Users/Arslan/Desktop/Joker/saved_files/'
+
+
 # REGEX
 ITEMS_COUNT_REGEX = re.compile(r'value=\"(?P<items_count>\d*)\"')
-ITEMS_ID_REGEX = re.compile(".*ProductCard__QuickView btn_text _desktop-sm b500 js-product-quickview.*")
+ITEMS_ID_REGEX = re.compile(r".*ProductCard__QuickView btn_text _desktop-sm b500 js-product-quickview.*")
+REVIEWS_COUNT = re.compile(r"(?P<reviews_count>\d+)")
